@@ -1,0 +1,14 @@
+use_frameworks!
+
+target ‘ImageSearch’ do
+	pod 'Alamofire'
+	pod 'Kingfisher'
+	pod 'RxSwift'
+	pod 'RxCocoa'
+end
+
+target 'ImageSearchTests' do
+	pod 'RxBlocking'
+	pod 'RxTest'
+end
+
