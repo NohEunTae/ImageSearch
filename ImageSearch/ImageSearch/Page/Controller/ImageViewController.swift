@@ -47,8 +47,8 @@ class ImageViewController: UIViewController {
         if let image = imagePresenter.image {
             imageView.image = image
         } else {
-            imagePresenter.downloadImage { [weak self] image in
-                self?.imageView.image = image
+            imagePresenter.downloadImage { image in
+                self.imageView.image = image
             }
         }
     }
@@ -69,8 +69,7 @@ class ImageViewController: UIViewController {
         scrollView.addGestureRecognizer(scrollViewTap)
         
         scrollViewTap.rx.event
-            .bind { [weak self] _ in
-                guard let self = self else { return }
+            .bind { _ in
                 self.closeButton.isHidden = !self.closeButton.isHidden
                 self.shareButton.isHidden = !self.shareButton.isHidden
                 self.downloadButton.isHidden = !self.downloadButton.isHidden

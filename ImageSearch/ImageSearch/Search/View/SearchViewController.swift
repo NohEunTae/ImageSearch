@@ -17,7 +17,6 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     var disposeBag = DisposeBag()
-    var searchBarBag = DisposeBag()
     var viewModel = SearchImageViewModel()
 
     init() {
@@ -32,19 +31,21 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
         setupTableView()
-        bindUI()
+        bindInput()
+        bindOutput()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         Observable.combineLatest(viewModel.data.asObservable(), imageTableView.rx.itemSelected) {
             ($0, $1)
             }
             .subscribeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] imagePresenters, indexPath in
+            .subscribe(onNext: { imagePresenters, indexPath in
                 guard !imagePresenters.isEmpty else { return }
                 let pageVC = ImagePageViewController(imagePresenters: imagePresenters, startIndex: indexPath.row)
-                self?.navigationController?.pushViewController(pageVC, animated: true)
+                self.navigationController?.pushViewController(pageVC, animated: true)
             })
             .disposed(by: disposeBag)
     }
@@ -57,46 +58,42 @@ class SearchViewController: UIViewController {
     func setupTableView() {
         let nibCell = UINib(nibName: "ImageTableViewCell", bundle: nil)
         imageTableView.register(nibCell, forCellReuseIdentifier: "ImageTableViewCell")
-        imageTableView.delegate = self
-        imageTableView.prefetchDataSource = self
+        imageTableView.rx.setPrefetchDataSource(self).disposed(by: viewModel.disposeBag)
+        imageTableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
     }
     
-    func bindUI() {
-        bindTableView()
-
-        viewModel.indicatorAnimating
-            .bind(to: self.indicator.rx.isAnimating)
+    func bindInput() {
+        let distinctUntilChanged = searchBar.rx.text.orEmpty.distinctUntilChanged()
+        distinctUntilChanged
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.searchText)
             .disposed(by: viewModel.disposeBag)
+        
+        distinctUntilChanged
+            .subscribe(onNext: { text in
+                let animation = text.isEmpty ? false : true
+                self.viewModel.indicatorAnimating.accept(animation)
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        viewModel.indicatorAnimating
+            .bind(to: indicator.rx.isAnimating)
+            .disposed(by: viewModel.disposeBag)
+    }
     
+    func bindOutput() {
         viewModel.error
-            .subscribe(onNext: { [weak self] error in
+            .subscribe(onNext: { error in
                 switch error {
                 case .json:
-                    self?.presentAlert("결과 없음", message: "입력한 단어의 이미지 목록이 없습니다", completion: nil)
+                    self.presentAlert("결과 없음", message: "입력한 단어의 이미지 목록이 없습니다", completion: nil)
                 case .network:
-                    self?.presentAlert("네트워크 오류", message: "인터넷 연결상태를 확인하세요", completion: nil)
+                    self.presentAlert("네트워크 오류", message: "인터넷 연결상태를 확인하세요", completion: nil)
                 default:
                     break
                 }
             }).disposed(by: viewModel.disposeBag)
         
-        searchBar.rx.text.orEmpty
-            .distinctUntilChanged()
-            .debounce(.seconds(1), scheduler: MainScheduler.instance)
-            .bind(to: viewModel.searchText)
-            .disposed(by: searchBarBag)
-        
-        searchBar.rx.text.orEmpty
-            .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] text in
-                let animation = text.isEmpty ? false : true
-                self?.viewModel.indicatorAnimating.accept(animation)
-                self?.viewModel.disposeBag = DisposeBag()
-            })
-            .disposed(by: searchBarBag)
-    }
-    
-    func bindTableView() {
         viewModel.data
             .drive(imageTableView.rx.items(cellIdentifier: "ImageTableViewCell")) { _, model, cell in
                 if let imageCell = cell as? ImageTableViewCell {
@@ -105,9 +102,7 @@ class SearchViewController: UIViewController {
                     } else {
                         imageCell.modifyCell(image: UIImage())
                         model.downloadImage { image in
-                            DispatchQueue.main.async {
-                                imageCell.modifyCell(image: image)
-                            }
+                            imageCell.modifyCell(image: image)
                         }
                     }
                 }

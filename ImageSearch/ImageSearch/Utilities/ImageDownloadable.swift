@@ -32,9 +32,9 @@ extension ImageDownloadable {
                 .cacheOriginalImage
             ],
             progressBlock: nil,
-            completionHandler: { [weak self] (image, error, cacheType, imageUrl) in
+            completionHandler: { (image, error, cacheType, imageUrl) in
                 DispatchQueue.main.async {
-                    guard let self = self else { return }
+                    if let error = error, error.code == 10002 { return }
                     let validImage = image ?? UIImage(named: "notFound")!
                     self.image = validImage
                     completion?(validImage)

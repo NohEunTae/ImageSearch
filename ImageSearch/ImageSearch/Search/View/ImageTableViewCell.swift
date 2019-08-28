@@ -24,6 +24,7 @@ class ImageTableViewCell: UITableViewCell {
     }
     
     func modifyCell(image: UIImage) {
-        self.picture.image = image
+        picture.image = image
+        setNeedsLayout()
     }
 }
