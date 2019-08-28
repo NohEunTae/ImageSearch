@@ -17,6 +17,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     var disposeBag = DisposeBag()
+    var searchBag = DisposeBag()
     var viewModel = SearchImageViewModel()
 
     init() {
@@ -30,9 +31,9 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
-        setupTableView()
         bindInput()
         bindOutput()
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,14 +68,15 @@ class SearchViewController: UIViewController {
         distinctUntilChanged
             .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .bind(to: viewModel.searchText)
-            .disposed(by: viewModel.disposeBag)
+            .disposed(by: searchBag)
         
         distinctUntilChanged
             .subscribe(onNext: { text in
                 let animation = text.isEmpty ? false : true
                 self.viewModel.indicatorAnimating.accept(animation)
+                self.viewModel.disposeBag = DisposeBag()
             })
-            .disposed(by: viewModel.disposeBag)
+            .disposed(by: searchBag)
         
         viewModel.indicatorAnimating
             .bind(to: indicator.rx.isAnimating)
@@ -111,6 +113,8 @@ class SearchViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDelegate
+
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var cropRatio: CGFloat = 0
@@ -128,6 +132,8 @@ extension SearchViewController: UITableViewDelegate {
         searchBar.resignFirstResponder()
     }
 }
+
+// MARK: - UITableViewDataSourcePrefetching
 
 extension SearchViewController : UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {

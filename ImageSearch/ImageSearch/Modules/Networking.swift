@@ -27,6 +27,7 @@ struct Networking {
                     switch response.result {
                     case .success(let json):
                         do {
+                            print(json)
                             let jsonData = try JSONSerialization.data(withJSONObject: json)
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
