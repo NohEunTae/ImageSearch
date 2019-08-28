@@ -12,8 +12,8 @@ import RxSwift
 
 class ImagePageViewController: UIViewController {
     
-    var pageController: UIPageViewController!
-    let page: Page
+    private var pageController: UIPageViewController!
+    private let page: Page
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +29,7 @@ class ImagePageViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupPageController() {
+    private func setupPageController() {
         pageController = UIPageViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal, options: nil)
         pageController.dataSource = self
         
@@ -49,7 +49,7 @@ class ImagePageViewController: UIViewController {
 
     }
     
-    func viewController(at index: Int) -> ImageViewController? {
+    private func viewController(at index: Int) -> ImageViewController? {
         if (page.imagePresenters.isEmpty || page.imagePresenters.count <= index) {
             return nil
         }

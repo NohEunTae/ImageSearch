@@ -16,9 +16,9 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var indicator: UIActivityIndicatorView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var disposeBag = DisposeBag()
-    var searchBag = DisposeBag()
-    var viewModel = SearchImageViewModel()
+    private var disposeBag = DisposeBag()
+    private var searchBag = DisposeBag()
+    private var viewModel = SearchImageViewModel()
 
     init() {
         super.init(nibName: "SearchViewController", bundle: nil)
@@ -38,7 +38,15 @@ class SearchViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        combineToCellSelected()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        disposeBag = DisposeBag()
+    }
+    
+    private func combineToCellSelected() {
         Observable.combineLatest(viewModel.data.asObservable(), imageTableView.rx.itemSelected) {
             ($0, $1)
             }
@@ -51,19 +59,14 @@ class SearchViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        disposeBag = DisposeBag()
-    }
-    
-    func setupTableView() {
+    private func setupTableView() {
         let nibCell = UINib(nibName: "ImageTableViewCell", bundle: nil)
         imageTableView.register(nibCell, forCellReuseIdentifier: "ImageTableViewCell")
         imageTableView.rx.setPrefetchDataSource(self).disposed(by: viewModel.disposeBag)
         imageTableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
     }
     
-    func bindInput() {
+    private func bindInput() {
         let distinctUntilChanged = searchBar.rx.text.orEmpty.distinctUntilChanged()
         distinctUntilChanged
             .debounce(.seconds(1), scheduler: MainScheduler.instance)
@@ -83,7 +86,7 @@ class SearchViewController: UIViewController {
             .disposed(by: viewModel.disposeBag)
     }
     
-    func bindOutput() {
+    private func bindOutput() {
         viewModel.error
             .subscribe(onNext: { error in
                 switch error {

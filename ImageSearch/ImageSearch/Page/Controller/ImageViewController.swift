@@ -20,8 +20,8 @@ class ImageViewController: UIViewController {
     @IBOutlet weak var downloadButton: UIButton!
     
     var pageIndex : Int
-    var imagePresenter: ImagePresenter
-    var disposeBag = DisposeBag()
+    private var imagePresenter: ImagePresenter
+    private var disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class ImageViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupImageView() {
+    private func setupImageView() {
         
         if let image = imagePresenter.image {
             imageView.image = image
@@ -53,14 +53,14 @@ class ImageViewController: UIViewController {
         }
     }
     
-    func setupButtons() {
+    private func setupButtons() {
         closeButton.rx.controlEvent(.touchDown).subscribe(onNext: closeBtnClicked).disposed(by: disposeBag)
         shareButton.rx.controlEvent(.touchDown).subscribe(onNext: shareBtnClicked).disposed(by: disposeBag)
         downloadButton.rx.controlEvent(.touchDown).subscribe(onNext: downloadBtnClicked).disposed(by: disposeBag)
     }
 
     // 스크롤뷰 설정
-    func setupScrollView() {
+    private func setupScrollView() {
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 2.0
         scrollView.delegate = self
@@ -77,12 +77,12 @@ class ImageViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    func closeBtnClicked() {
+    private func closeBtnClicked() {
         navigationController?.popViewController(animated: true)
     }
     
     // 공유 버튼 클릭 이벤트
-   func shareBtnClicked() {
+    private func shareBtnClicked() {
         if let image = imageView.image {
             let imageToShare = [image]
             let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
@@ -93,14 +93,14 @@ class ImageViewController: UIViewController {
     }
     
     // 다운로드 버튼 클릭 이벤트
-    func downloadBtnClicked() {
+    private func downloadBtnClicked() {
         if let image = self.imageView.image {
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     
     // 다운로드 성공 실패 여부
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+    @objc private func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
         error == nil ?
                 self.presentAlert("저장 완료", message: "이미지 저장이 완료되었습니다", completion: nil) :
                 self.presentAlert("오류", message: error!.localizedDescription, completion: nil)

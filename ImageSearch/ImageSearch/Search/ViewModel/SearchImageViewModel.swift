@@ -28,7 +28,7 @@ struct SearchImageViewModel {
             .asDriver(onErrorJustReturn: [])
     }()
     
-    func fetchData(_ text: String) -> Observable<[ImagePresenter]> {
+    private func fetchData(_ text: String) -> Observable<[ImagePresenter]> {
         guard !text.isEmpty else { return Observable.just([]) }
         let value: Observable<JSONImageData> = Networking.request(param: text)
         
