@@ -11,10 +11,11 @@ import Alamofire
 import RxSwift
 
 struct Networking {
-    static private let baseUrl = "https://dapi.kakao.com/v2/search/image?query="
-    static private let key = ["Authorization": "KakaoAK 57c7624a2478f7c7ebc1678f82867b69"]
+    static let shared = Networking()
+    private let baseUrl = "https://dapi.kakao.com/v2/search/image?query="
+    private let key = ["Authorization": "KakaoAK 57c7624a2478f7c7ebc1678f82867b69"]
     
-    static func request<T: Codable>(param: String) -> Observable<T> {
+    func request<T: Codable>(param: String) -> Observable<T> {
         var str_search = baseUrl + param
         
         return Observable<T>.create({ observer in
@@ -22,12 +23,11 @@ struct Networking {
             let dataRequest = Alamofire.request(str_search,
                                                 method: .get,
                                                 encoding: JSONEncoding.prettyPrinted,
-                                                headers: key)
+                                                headers: self.key)
                 .responseJSON{ response in
                     switch response.result {
                     case .success(let json):
                         do {
-                            print(json)
                             let jsonData = try JSONSerialization.data(withJSONObject: json)
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase

@@ -8,10 +8,10 @@
 
 import Foundation
 
-struct JSONImageData: Codable {
+struct JSONImageData: Codable, Equatable {
     let documents: [Image]
     
-    struct Image: Codable, ImageProtocol {
+    struct Image: Codable, ImageProtocol, Equatable {
         let imageUrl: URL
         let width: Double
         let height: Double

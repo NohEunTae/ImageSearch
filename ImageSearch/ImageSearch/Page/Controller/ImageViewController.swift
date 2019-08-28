@@ -19,8 +19,8 @@ class ImageViewController: UIViewController {
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var downloadButton: UIButton!
     
-    var pageIndex : Int
-    private var imagePresenter: ImagePresenter
+    let pageIndex : Int
+    private let imagePresenter: ImagePresenter
     private var disposeBag = DisposeBag()
     
     override func viewDidLoad() {

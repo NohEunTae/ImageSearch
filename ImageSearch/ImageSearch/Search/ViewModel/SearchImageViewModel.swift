@@ -30,7 +30,7 @@ struct SearchImageViewModel {
     
     private func fetchData(_ text: String) -> Observable<[ImagePresenter]> {
         guard !text.isEmpty else { return Observable.just([]) }
-        let value: Observable<JSONImageData> = Networking.request(param: text)
+        let value: Observable<JSONImageData> = Networking.shared.request(param: text)
         
         return Observable<[ImagePresenter]>.create({ observer in
             value.subscribe(onNext: { json in
