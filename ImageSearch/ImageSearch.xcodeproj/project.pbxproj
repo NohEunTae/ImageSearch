@@ -28,7 +28,8 @@
 		CE4FE6782314407A00528307 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE6772314407A00528307 /* UIViewController+Extension.swift */; };
 		CE4FE681231693DC00528307 /* ImageDownloadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE680231693DC00528307 /* ImageDownloadable.swift */; };
 		CE4FE68323169B0B00528307 /* ImageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE68223169B0B00528307 /* ImageProtocol.swift */; };
-		CE4FE6852316E0C200528307 /* NetworkingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE6842316E0C200528307 /* NetworkingTest.swift */; };
+		CE4FE6872316FA8F00528307 /* SearchingImageViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE6862316FA8F00528307 /* SearchingImageViewModelTest.swift */; };
+		CE4FE68B2317219300528307 /* ImagePresenterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE68A2317219300528307 /* ImagePresenterTest.swift */; };
 		E622DB981BDDFE183FA8A3CD /* Pods_ImageSearch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94B40127D30FFB9C0E207B0A /* Pods_ImageSearch.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,7 +73,8 @@
 		CE4FE6772314407A00528307 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		CE4FE680231693DC00528307 /* ImageDownloadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadable.swift; sourceTree = "<group>"; };
 		CE4FE68223169B0B00528307 /* ImageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProtocol.swift; sourceTree = "<group>"; };
-		CE4FE6842316E0C200528307 /* NetworkingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTest.swift; sourceTree = "<group>"; };
+		CE4FE6862316FA8F00528307 /* SearchingImageViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchingImageViewModelTest.swift; sourceTree = "<group>"; };
+		CE4FE68A2317219300528307 /* ImagePresenterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePresenterTest.swift; sourceTree = "<group>"; };
 		D4F0D83BFE9BA43C0062A1B5 /* Pods-ImageSearchTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageSearchTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageSearchTests/Pods-ImageSearchTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,9 +143,10 @@
 		CE4FE6492313E24200528307 /* ImageSearchTests */ = {
 			isa = PBXGroup;
 			children = (
+				CE4FE68A2317219300528307 /* ImagePresenterTest.swift */,
+				CE4FE6862316FA8F00528307 /* SearchingImageViewModelTest.swift */,
 				CE4FE64A2313E24200528307 /* ImageSearchTests.swift */,
 				CE4FE64C2313E24200528307 /* Info.plist */,
-				CE4FE6842316E0C200528307 /* NetworkingTest.swift */,
 			);
 			path = ImageSearchTests;
 			sourceTree = "<group>";
@@ -408,12 +411,16 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ImageSearchTests/Pods-ImageSearchTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
 				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
@@ -469,7 +476,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4FE64B2313E24200528307 /* ImageSearchTests.swift in Sources */,
-				CE4FE6852316E0C200528307 /* NetworkingTest.swift in Sources */,
+				CE4FE68B2317219300528307 /* ImagePresenterTest.swift in Sources */,
+				CE4FE6872316FA8F00528307 /* SearchingImageViewModelTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

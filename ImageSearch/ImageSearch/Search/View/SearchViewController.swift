@@ -18,7 +18,7 @@ class SearchViewController: UIViewController {
     
     private var disposeBag = DisposeBag()
     private var searchBag = DisposeBag()
-    private var viewModel = SearchImageViewModel()
+    private var viewModel = SearchImageViewModel(builder: Networking.shared)
 
     init() {
         super.init(nibName: "SearchViewController", bundle: nil)

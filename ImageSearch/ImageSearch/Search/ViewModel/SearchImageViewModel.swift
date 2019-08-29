@@ -22,15 +22,21 @@ struct SearchImageViewModel {
     let indicatorAnimating = BehaviorRelay<Bool>(value: false)
     let error = BehaviorRelay<Error>(value: .none)
     
+    private let builder: NetworkBuilder
+    
     lazy var data: Driver<[ImagePresenter]> = {
         return self.searchText.asObservable()
             .flatMapLatest(fetchData)
             .asDriver(onErrorJustReturn: [])
     }()
     
+    init(builder: NetworkBuilder) {
+        self.builder = builder
+    }
+    
     private func fetchData(_ text: String) -> Observable<[ImagePresenter]> {
         guard !text.isEmpty else { return Observable.just([]) }
-        let value: Observable<JSONImageData> = Networking.shared.request(param: text)
+        let value: Observable<JSONImageData> = builder.request(text)
         
         return Observable<[ImagePresenter]>.create({ observer in
             value.subscribe(onNext: { json in

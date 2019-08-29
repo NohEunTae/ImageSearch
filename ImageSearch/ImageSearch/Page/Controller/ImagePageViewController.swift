@@ -30,7 +30,7 @@ class ImagePageViewController: UIViewController {
     }
     
     private func setupPageController() {
-        pageController = UIPageViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal, options: nil)
+        pageController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pageController.dataSource = self
         
         guard let maybefirstViewController = viewController(at: page.startIndex) else { return }

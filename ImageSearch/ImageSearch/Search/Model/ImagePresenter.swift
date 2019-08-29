@@ -17,7 +17,7 @@ class ImagePresenter: ImageDownloadable {
     var image: UIImage?
     let downloader: ImageDownloader
 
-    init(model: JSONImageData.Image, image: UIImage?) {
+    init(model: JSONImageData.Image, image: UIImage? = nil) {
         self.image = image
         self.imageUrl = model.imageUrl
         self.width = model.width

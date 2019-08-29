@@ -10,12 +10,27 @@ import Foundation
 import Alamofire
 import RxSwift
 
-struct Networking {
-    static let shared = Networking()
-    private let baseUrl = "https://dapi.kakao.com/v2/search/image?query="
-    private let key = ["Authorization": "KakaoAK 57c7624a2478f7c7ebc1678f82867b69"]
+protocol NetworkBuilder {
+    var baseUrl: String { get }
+    var key: [String: String] { get }
+    static var shared: NetworkBuilder { get }
+    func request<T: Codable>(_ param: String) -> Observable<T>
+}
+
+extension NetworkBuilder {
+    var baseUrl: String {
+        return "https://dapi.kakao.com/v2/search/image?query="
+    }
     
-    func request<T: Codable>(param: String) -> Observable<T> {
+    var key: [String: String] {
+        return ["Authorization": "KakaoAK 57c7624a2478f7c7ebc1678f82867b69"]
+    }
+}
+
+struct Networking: NetworkBuilder {
+    static let shared: NetworkBuilder = Networking()
+    
+    func request<T: Codable>(_ param: String) -> Observable<T> {
         var str_search = baseUrl + param
         
         return Observable<T>.create({ observer in

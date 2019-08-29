@@ -10,5 +10,7 @@ end
 target 'ImageSearchTests' do
 	pod 'RxBlocking'
 	pod 'RxTest'
+	pod 'RxSwift'
+	pod 'RxCocoa'
 end
 
